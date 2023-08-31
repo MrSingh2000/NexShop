@@ -12,37 +12,41 @@ async function handler(req, res) {
     res.status(404).json({ error: "Not Found!" });
     res.end();
   }
+  try {
+    // Extract fullName, email, and password from the request body
+    const { fullName, email, password } = req.body;
 
-  // Extract fullName, email, and password from the request body
-  const { fullName, email, password } = req.body;
+    // Check if a user with the provided email already exists in the database
+    const existingUser = await User.findOne({ email });
+    if (existingUser)
+      return res.status(401).json({ error: "User already exists" });
 
-  // Check if a user with the provided email already exists in the database
-  const existingUser = await User.findOne({ email });
-  if (existingUser)
-    return res.status(401).json({ error: "User already exists" });
+    // Generate a salt and hash the password using bcrypt for secure storage
+    const salt = bcrypt.genSaltSync(10);
+    const encryptedPassword = bcrypt.hashSync(password, salt);
 
-  // Generate a salt and hash the password using bcrypt for secure storage
-  const salt = bcrypt.genSaltSync(10);
-  const encryptedPassword = bcrypt.hashSync(password, salt);
+    // Create a new user with the provided data and the encrypted password
+    const user = await User.create({
+      fullName,
+      email,
+      password: encryptedPassword,
+    });
 
-  // Create a new user with the provided data and the encrypted password
-  const user = await User.create({
-    fullName,
-    email,
-    password: encryptedPassword,
-  });
+    // Generate a JWT token containing user information and a secret key
+    const jwtToken = await jwt.sign(
+      {
+        email: user.email,
+        id: user._id,
+      },
+      process.env.SECRET_KEY
+    );
 
-  // Generate a JWT token containing user information and a secret key
-  const jwtToken = await jwt.sign(
-    {
-      email: user.email,
-      id: user._id,
-    },
-    process.env.SECRET_KEY
-  );
-
-  // Respond with the generated JWT token
-  res.status(200).json({ authToken: jwtToken });
+    // Respond with the generated JWT token
+    res.status(200).json({ authToken: jwtToken });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error });
+  }
 }
 
 // Connect the MongoDB middleware to the API route handler

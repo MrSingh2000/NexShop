@@ -20,7 +20,7 @@ function Card() {
           Discover our collection of beautifully crafted themes and templates
           built with Tailwind CSS and Next.js.
         </p>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row items-center justify-between">
           <span className="text-custom-pink font-semibold text-lg">$19.99</span>
           <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300">
             Buy Now
