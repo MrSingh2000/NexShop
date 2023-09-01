@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const verifyJwt = (handler) => (req, res) => {
-  if (req.method == "POST" || req.method == "PUT") {
+  if (req.method == "POST" || req.method == "PUT" || req.method == "DELETE") {
     // get the authToken from the header
     const token = req.headers.authtoken;
     if (!token) {

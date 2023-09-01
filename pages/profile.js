@@ -1,13 +1,10 @@
 import Card from "@/components/Card";
 import Sellprompt from "@/components/Sellprompt";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-
-import { AdvancedImage } from "@cloudinary/react";
-import { Cloudinary } from "@cloudinary/url-gen";
 
 export default function Profile({ products }) {
   const [showSellPrompt, setShowSellPrompt] = useState(false);
+  console.log(products)
 
   const handleSellPrompt = () => {
     setShowSellPrompt((prev) => !prev);
@@ -34,13 +31,13 @@ export default function Profile({ products }) {
         <div className="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
           <div className="grid w-full grid-cols-2 gap-6 mx-auto md:grid-cols-3">
             {products.map((product) => {
-              return <Card key={product.id} myProfile={true} />;
+              return <Card key={product._id} product={product} myProfile={true} />;
             })}
           </div>
         </div>
       </div>
       {showSellPrompt ? (
-        <Sellprompt handleSellPrompt={handleSellPrompt} type="add" />
+        <Sellprompt handleSellPrompt={handleSellPrompt} type="add"/>
       ) : null}
     </div>
   );
@@ -53,11 +50,10 @@ export async function getServerSideProps(ctx) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      authToken: authToken,
+      "authToken": authToken,
     },
   }).then(async (res) => {
     return res.json().then((response) => {
-      console.log(response);
       products = response.products;
     });
   });

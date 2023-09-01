@@ -42,7 +42,7 @@ async function handler(req, res) {
   user.products = userProducts;
 
   // Save the updated user information
-  const updatedUser = await user.save();
+  await user.save();
 
   // Respond with a success message
   res.status(200).json({ message: "Product added successfully" });

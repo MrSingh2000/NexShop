@@ -26,8 +26,13 @@ async function handler(req, res) {
 
   // Handle DELETE request
   } else if (req.method == "DELETE") {
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     // Find and delete the product by its ID
     const product = await Product.findByIdAndDelete(productId);
+    const user = await User.findById(userId);
+    user.products = user.products.filter((item) => item !== productId);
+    await user.save();
+    
     res.status(200).send("DELETED");
 
   // Handle PUT request

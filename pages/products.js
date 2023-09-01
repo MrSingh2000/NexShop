@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function Products({products}) {
-  // const [products, setProducts] = useState();
-  // const dispatch = useDispatch();
 
   return (
       <div className="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
         <div className="grid w-full grid-cols-2 gap-6 mx-auto md:grid-cols-3">
           {products.map((item) => {
-            return <Card key={item.id} />;
+            console.log(item)
+            return <Card key={item._id} product={item}/>;
           })}
         </div>
       </div>
