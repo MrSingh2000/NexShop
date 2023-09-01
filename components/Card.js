@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-function Card() {
+function Card({myProfile}) {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:border-2 hover:border-custom-pink transform transition-all duration-300 hover:scale-105">
       <Image
@@ -23,7 +23,7 @@ function Card() {
         <div className="flex flex-col md:flex-row items-center justify-between">
           <span className="text-custom-pink font-semibold text-lg">$19.99</span>
           <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300">
-            Buy Now
+            {myProfile ? 'Edit' : 'Buy Now'}
           </button>
         </div>
       </div>

@@ -10,11 +10,35 @@ async function handler(req, res) {
     res.end();
   }
 
-  // Fetch all products from the database using the Product model
-  const products = await Product.find();
+  try {
+    const category = req.query.category;
+    console.log("server category: ", category);
+    let products;
+    // categories available: footwear, clothing, electronics and others
+    switch (category) {
+      case "all":
+        // Fetch all products from the database using the Product model
+        products = await Product.find();
+        break;
+      case "footwear":
+        products = await Product.find({ category: "footwear" });
+        break;
+      case "clothing":
+        products = await Product.find({ category: "clothing" });
+        break;
+      case "electronics":
+        products = await Product.find({ category: "electronics" });
+        break;
+      default:
+        products = await Product.find({ category: "others" });
+        break;
+    }
 
-  // Respond with the fetched products
-  res.status(200).json({ products });
+    // Respond with the fetched products
+    res.status(200).json({ products });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 }
 
 // Connect the MongoDB middleware to the API route handler

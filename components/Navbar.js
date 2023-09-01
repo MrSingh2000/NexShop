@@ -1,9 +1,23 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { BiCart } from "react-icons/bi";
+import { FiLogOut } from "react-icons/fi";
+import { CgProfile } from "react-icons/cg";
+import { updateAuthToken } from "@/state/slices/authTokenSlice";
+import { showToast } from "@/helpers";
 
 function Navbar() {
   const [openHamburger, setOpenHamburger] = useState(false);
+  const authToken = useSelector((store) => store.authToken.value);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    dispatch(updateAuthToken(null));
+    showToast("Logout successfull!");
+  };
 
   return (
     <>
@@ -66,18 +80,55 @@ function Navbar() {
               </Link>
             </div>
 
-            <div className="inline-flex items-center gap-2 list-none lg:ml-auto md:mt-0 mt-6">
-              <Link href="/auth/signin">
-                <button className="items-center block px-10 py-2.5 text-base font-medium text-center text-blue-600 transition duration-500 ease-in-out transform border-2 bg-white md:bg-transparent border-white shadow-md rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                  Sign in
+            {!authToken ? (
+              <div className="inline-flex items-center gap-2 list-none lg:ml-auto md:mt-0 mt-6">
+                <Link href="/auth/signin">
+                  <button className="items-center block px-10 py-2.5 text-base font-medium text-center text-blue-600 transition duration-500 ease-in-out transform border-2 bg-white md:bg-transparent border-white shadow-md rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Sign in
+                  </button>
+                </Link>
+                <Link href="/auth/signup">
+                  <button className="items-center block px-10 py-3 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Sign up
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <div className="inline-flex flex-col md:flex-row items-start md:items-center gap-2 list-none lg:ml-auto md:mt-0 mt-6">
+                <div className="flex gap-2">
+                  <Link href="/cart">
+                    <button className="items-center hidden md:block px-5 py-2.5 text-base font-medium text-center text-blue-600 transition duration-500 ease-in-out transform border-2 bg-white md:bg-transparent border-white shadow-md rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                      <BiCart size={20} />
+                    </button>
+                    <button className="items-center block md:hidden px-10 py-2.5 text-base font-medium text-center text-blue-600 transition duration-500 ease-in-out transform border-2 bg-white md:bg-transparent border-white shadow-md rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                      Cart
+                    </button>
+                  </Link>
+
+                  <Link href="/profile">
+                  <button className="items-center hidden md:block px-5 py-2.5 text-base font-medium text-center text-white transition duration-500 ease-in-out transform border-2 bg-white md:bg-pink-300 border-pink-300 shadow-md rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-pink">
+                    <CgProfile size={20} />
+                  </button>
+                  <button className="items-center block md:hidden px-10 py-2.5 text-base font-medium text-center text-blue-600 transition duration-500 ease-in-out transform border-2 bg-white md:bg-transparent border-white shadow-md rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Profile
+                  </button>
+                  </Link>
+                </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="hidden items-center md:block px-5 py-3 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  <FiLogOut />
                 </button>
-              </Link>
-              <Link href="/auth/signup">
-                <button className="items-center block px-10 py-3 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                  Sign up
+                <button
+                  onClick={handleLogout}
+                  className="items-center block md:hidden px-10 py-3 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Logout
                 </button>
-              </Link>
-            </div>
+              </div>
+            )}
           </nav>
         </div>
       </div>

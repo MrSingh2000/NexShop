@@ -1,10 +1,22 @@
 import Card from "@/components/Card";
+import { updateAuthToken } from "@/state/slices/authTokenSlice";
 import { Inter } from "next/font/google";
 import Image from "next/image";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      dispatch(updateAuthToken(localStorage.getItem("authToken")));
+      document.cookie = `authToken=${localStorage.getItem('authToken')}`;
+    }
+  }, []);
+
   return (
     <div>
       <div className="p-3">

@@ -1,6 +1,7 @@
 // Import necessary modules and dependencies
 import connectMongoDB from "@/middlewares/db"; // Import middleware to connect to MongoDB
 import verifyJwt from "@/middlewares/jwtToken"; // Import middleware to verify JWT token
+import aws from "@/middlewares/multer-handler";
 import Product from "@/models/Product"; // Import the Product model
 import User from "@/models/User"; // Import the User model
 import mongoose from "mongoose"; // Import Mongoose for MongoDB interactions
@@ -12,6 +13,9 @@ async function handler(req, res) {
     res.status(404);
     res.end();
   }
+  console.log(req.file);
+  res.status(200);
+  res.end();
 
   // Extract the user ID from the verified JWT token
   const userId = req.user.id;
@@ -46,4 +50,4 @@ async function handler(req, res) {
 }
 
 // Connect the MongoDB middleware and JWT verification middleware to the API route handler
-export default connectMongoDB(verifyJwt(handler));
+export default aws(connectMongoDB(verifyJwt(handler)));
