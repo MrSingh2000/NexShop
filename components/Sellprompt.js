@@ -1,11 +1,13 @@
 import { showToast } from "@/helpers";
 import { updateLoading } from "@/state/slices/loadingSlice";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Sellprompt(props) {
   const dispatch = useDispatch();
   const { handleSellPrompt, type } = props;
+  const authToken = useSelector((store) => store.authToken.value);
+
   const [productDetails, setProductDetails] = useState({
     name: "",
     description: "",
@@ -14,6 +16,45 @@ function Sellprompt(props) {
     imageUrl: "",
   });
   const [categoryDropdown, setCategoryDropdown] = useState(false);
+
+  const [image, setImage] = useState(null);
+
+  const uploadImage = () => {
+    return new Promise(async (resolve, reject) => {
+      const signResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/signupload`
+      );
+      const signData = await signResponse.json();
+
+      const url =
+        "https://api.cloudinary.com/v1_1/" +
+        process.env.NEXT_PUBLIC_CLOUDINARY_CLOUDNAME +
+        "/auto/upload";
+
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
+      formData.append("timestamp", signData.timestamp);
+      formData.append("signature", signData.signature);
+      formData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+      formData.append("folder", "signed_upload_demo_form");
+
+      await fetch(url, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          return response.text();
+        })
+        .then((data) => {
+          const res = JSON.parse(data);
+          resolve(res.url);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  };
 
   const showDropdown = () => {
     setCategoryDropdown((prev) => !prev);
@@ -33,24 +74,55 @@ function Sellprompt(props) {
   };
 
   const handleFile = (e) => {
+    setImage(e.target.files[0]);
     console.log(e.target.files[0]);
-  }
+  };
+
+  const validateProduct = () => {
+    console.log(productDetails)
+    if (
+      !productDetails.name ||
+      !productDetails.category ||
+      !image ||
+      !productDetails.description ||
+      !productDetails.price
+    )
+      return false;
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!validateProduct()){
+      showToast('Kindly fill every detail', 'error');
+      return;
+    }
     dispatch(updateLoading(true));
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/product/add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...productDetails,
-        price: parseInt(productDetails.price),
-      }),
-    });
+    await uploadImage()
+      .then(async (imageRes) => {
+        console.log(imageRes);
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/product/add`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "authToken": authToken
+          },
+          body: JSON.stringify({
+            ...productDetails,
+            price: parseInt(productDetails.price),
+            imageUrl: imageRes
+          }),
+        }).then((res) => {
+          showToast(res.message);
+        }).catch((err) => {
+          showToast(err.error)
+        });
+      })
+      .catch((err) => {
+        showToast(err, "error");
+      });
+
     dispatch(updateLoading(false));
-    showToast("Product added!");
     handleSellPrompt();
   };
 
@@ -133,8 +205,12 @@ function Sellprompt(props) {
           <div className="w-full h-full text-center">
             <div className="flex flex-col justify-between h-full">
               <label class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer">
-                Choose File
-                <input onChange={(e) => handleFile(e)} type="file" class="hidden" />
+                {image ? image.name : "Choose file"}
+                <input
+                  onChange={(e) => handleFile(e)}
+                  type="file"
+                  class="hidden"
+                />
               </label>
               <p className="mt-4 text-xl font-bold text-gray-800 dark:text-gray-200">
                 Product Details

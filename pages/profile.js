@@ -2,7 +2,9 @@ import Card from "@/components/Card";
 import Sellprompt from "@/components/Sellprompt";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import Dropzone from "@/components/Dropzone";
+
+import { AdvancedImage } from "@cloudinary/react";
+import { Cloudinary } from "@cloudinary/url-gen";
 
 export default function Profile({ products }) {
   const [showSellPrompt, setShowSellPrompt] = useState(false);
@@ -40,7 +42,6 @@ export default function Profile({ products }) {
       {showSellPrompt ? (
         <Sellprompt handleSellPrompt={handleSellPrompt} type="add" />
       ) : null}
-      <Dropzone />
     </div>
   );
 }
@@ -52,7 +53,7 @@ export async function getServerSideProps(ctx) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "authToken": authToken,
+      authToken: authToken,
     },
   }).then(async (res) => {
     return res.json().then((response) => {
