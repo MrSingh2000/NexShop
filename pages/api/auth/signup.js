@@ -42,7 +42,10 @@ async function handler(req, res) {
     );
 
     // Respond with the generated JWT token
-    res.status(200).json({ authToken: jwtToken });
+    res.status(200).json({ authToken: jwtToken, user: {
+      fullName,
+      email
+    } });
   } catch (error) {
     console.log(error)
     res.status(500).json({ error });

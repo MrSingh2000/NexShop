@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import Footer from "@/components/Footer";
 import { updateAuthToken } from "@/state/slices/authTokenSlice";
 import { Inter } from "next/font/google";
 import Image from "next/image";
@@ -8,16 +9,7 @@ import { useDispatch } from "react-redux";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home({ products }) {
-  const [first, setfirst] = useState(null)
-  const dispatch = useDispatch();
   console.log(products)
-
-  useEffect(() => {
-    if (localStorage.getItem("authToken")) {
-      dispatch(updateAuthToken(localStorage.getItem("authToken")));
-      document.cookie = `authToken=${localStorage.getItem("authToken")}`;
-    }
-  }, []);
 
   return (
     <div>
@@ -74,6 +66,7 @@ export default function Home({ products }) {
           </div>
         </section>
       </div>
+      <Footer />
     </div>
   );
 }

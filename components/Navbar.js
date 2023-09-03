@@ -57,7 +57,7 @@ function Navbar() {
               openHamburger
                 ? "block bg-pink-300 border-custom-pink absolute w-11/12 top-[70px] px-2 rounded-xl"
                 : "hidden"
-            } pb-4 border-blue-600 md:pb-0 md:flex md:justify-between md:flex-row lg:border-l-2 lg:pl-2`}
+            } pb-4 border-blue-600 md:pb-0 md:flex md:justify-between md:flex-row lg:border-l-2 lg:pl-2 z-10`}
           >
             <div className="flex flex-col md:inline bg-transparent">
               <Link
@@ -146,7 +146,7 @@ function Navbar() {
             </li>
             <li>
               <Link
-                href="/products?category=all"
+                href="/products?category=footwear"
                 className="px-4 py-1 mr-1 text-base text-gray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-blue-600"
               >
                 Footwear
@@ -154,7 +154,7 @@ function Navbar() {
             </li>
             <li>
               <Link
-                href="/products?category=all"
+                href="/products?category=clothing"
                 className="px-4 py-1 mr-1 text-base text-gray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-blue-600"
               >
                 Clothing
@@ -162,7 +162,7 @@ function Navbar() {
             </li>
             <li>
               <Link
-                href="/products?category=all"
+                href="/products?category=electronics"
                 className="px-4 py-1 mr-1 text-base text-gray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-blue-600"
               >
                 Electronics
@@ -170,7 +170,7 @@ function Navbar() {
             </li>
             <li>
               <Link
-                href="/products?category=all"
+                href="/products?category=others"
                 className="px-4 py-1 mr-1 text-base text-gray-500 transition duration-500 ease-in-out transform rounded-md focus:shadow-outline focus:outline-none focus:ring-2 ring-offset-current ring-offset-2 hover:text-blue-600"
               >
                 Others

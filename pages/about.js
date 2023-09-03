@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import {
   TbBrandNextjs,
   TbBrandRedux,
-  TbBrandAzure,
   TbBrandMongodb,
 } from "react-icons/tb";
+import {FaCloudDownloadAlt} from 'react-icons/fa';
 import {
   SlSocialInstagram,
   SlSocialGithub,
@@ -16,14 +16,14 @@ import Image from "next/image";
 const About = () => {
   return (
     <div className="flex flex-col items-center bg-gradient-to-b from-pink-300 via-pink-500 to-pink-700 min-h-screen text-white">
-      <div className="bg-white p-6 shadow-md w-fit mt-3 rounded-2xl">
+      <div className="bg-white p-6 shadow-md mt-3 rounded-2xl">
         <Image
           src="/assets/logo.png"
           alt="Team Member"
           className="rounded-lg"
           height={115}
           width={115}
-          layout="responsive"
+          layout="fixed"
         />
       </div>
       <div className="container mx-auto px-4 py-16">
@@ -49,8 +49,8 @@ const About = () => {
             <p>Redux for state management</p>
           </li>
           <li className="flex gap-2 items-center">
-            <TbBrandAzure size={40} color="#598ED8" />
-            <p>Azure Storage for images</p>
+            <FaCloudDownloadAlt size={40} color="#598ED8" />
+            <p>Cloudinary Storage for images</p>
           </li>
           <li className="flex gap-2 items-center">
             <TbBrandMongodb size={40} color="#4BDF46" />

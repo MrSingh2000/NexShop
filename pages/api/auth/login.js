@@ -35,7 +35,10 @@ async function handler(req, res) {
   );
 
   // Respond with the generated JWT token
-  res.status(200).json({ authToken: jwtToken });
+  res.status(200).json({ authToken: jwtToken, user: {
+    email: user.email,
+    fullName: user.fullName,
+  } });
 }
 
 // Connect the MongoDB middleware to the API route handler

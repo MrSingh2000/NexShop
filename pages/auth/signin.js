@@ -1,6 +1,7 @@
 import { showToast } from "@/helpers";
 import { updateAuthToken } from "@/state/slices/authTokenSlice";
 import { updateLoading } from "@/state/slices/loadingSlice";
+import { updateUser } from "@/state/slices/userSlice";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -13,7 +14,14 @@ export default function SignIn() {
   const authToken = useSelector((store) => store.authToken.value);
 
   useEffect(() => {
-    if (localStorage.getItem("authToken") || authToken) router.push("/");
+    if (typeof window !== "undefined") {
+      if (!authToken) {
+        if (localStorage.getItem("authToken")) {
+          dispatch(updateAuthToken(localStorage.getItem("authToken")));
+          router.push("/");
+        }
+      }
+    }
   }, [authToken, router]);
 
   const handleChange = (e) => {
@@ -38,9 +46,15 @@ export default function SignIn() {
             showToast(response.error, "error");
             return;
           }
-          showToast("Login Successful!");
+          showToast("Welcome ", response.user.fullName);
           dispatch(updateAuthToken(response.authToken));
           localStorage.setItem("authToken", response.authToken);
+          dispatch(
+            updateUser({
+              fullName: response.user.fullName,
+              email: response.user.email,
+            })
+          );
           router.push("/");
         });
       })

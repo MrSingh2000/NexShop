@@ -22,7 +22,7 @@ async function handler(req, res) {
     res.end();
   }
   
-  res.status(200).json({ user });
+  res.status(200).json({ fullName: user.fullName, email: user.email });
 }
 
 // Connect the MongoDB middleware to the API route handler
